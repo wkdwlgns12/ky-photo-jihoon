@@ -29,6 +29,9 @@ const authRoutes=require("./routes/authroutes")
 app.use("/api/auth",authRoutes)
 
 
+// authroutes다음 
+const events = require('./routes/events');
+app.use('/api/events', events);
 
 
 
