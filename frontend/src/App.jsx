@@ -1,135 +1,38 @@
+import { Routes, Route, Link } from 'react-router-dom'
+import Home from './screens/Home'
+import Calendar from './screens/Calendar'
+import ProtectRoute from './ui/ProtectRoute'
+import AuthModal from './auth/AuthModal'
+import { useAuth } from './auth/AuthContext'
 
-import './App.scss'
-import { useState, useEffect } from 'react'
-import { Routes, Route, Navigate } from 'react-router-dom'
-import AuthPanel from './components/AuthPanel'
-import Landing from './pages/Landing'
-import Header from './components/Header'
-import ProtectRoute from './components/ProtectRoute'
-import UserDashboard from './pages/user/userDashboard'
-import AdminDashboard from './pages/admin/adminDashboard'
-import {
-  fetchMe as apiFetchMe,
-  logout as apiLogout,
-  saveAuthToStorage,
-  clearAuthStorage
-} from "./api/client"
-function App() {
-
-  const [user, setUser] = useState(() => {
-    const raw = localStorage.getItem('user')
-    return raw ? JSON.parse(raw) : null
-  })
-
-
-
-  const [token, setToken] = useState(() => localStorage.getItem('token'))
-  const [me, setMe] = useState(null)
-  const isAuthed = !!token
-
-
-  const hideOn = new Set(['/','/admin/login'])
-  const showHeader = isAuthed && !hideOn.has(location.pathname)
-
-
-  const handleAuthed = async ({ user, token }) => {
-    try {
-
-      setUser(user)
-      setToken(token ?? null)
-      saveAuthToStorage({ user, token })
-      handleFetchMe()
-    } catch (error) {
-      console.error(error)
-    }
-
-  }
-
-  const handleLogout = async () => {
-    try {
-      await apiLogout()
-    } catch (error) {
-
-    } finally {
-      setUser(null)
-      setToken(null)
-      setMe(null)
-      clearAuthStorage()
-    }
-
-  }
-
-  const handleFetchMe = async () => {
-    try {
-      const { user } = await apiFetchMe()
-      setMe(user)
-
-    } catch (error) {
-      setMe({ error: '내 정보 조회 실패' })
-      console.error(error)
-    }
-  }
-
-  useEffect(() => {
-    if (isAuthed) handleFetchMe()
-  }, [isAuthed])
+export default function App() {
+  const { user, logout } = useAuth()
 
   return (
-    <div className='page'>
-      {showHeader && <Header
-      isAuthed={isAuthed}
-      user={user}
-      onLogout={handleLogout}
-      />}
+    <div style={{ fontFamily: 'system-ui, sans-serif', padding: 16 }}>
+      <header style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+        <Link to="/">Home</Link>
+        {user && <Link to="/calendar">Calendar</Link>}
+        <div style={{ marginLeft: 'auto' }}>
+          {user ? (
+            <>
+              <span style={{ marginRight: 8 }}>{user.name || user.email}</span>
+              <button onClick={logout}>Logout</button>
+            </>
+          ) : (
+            <AuthModal />
+          )}
+        </div>
+      </header>
 
-      <Routes>
-        <Route path='/' element={<Landing />} />
-        {/* 로그인 회원가입 */}
-        <Route
-          path='/admin/login'
-          element={<AuthPanel
-            isAuthed={isAuthed}
-            user={user}
-            me={me}
-            onFetchMe={handleFetchMe}
-            onLogout={handleLogout}
-            onAuthed={handleAuthed}
-            requiredRole="admin"
-          />}
-        />
-        {/* 사용자 보호구역 */}
-        <Route
-          path='/user'
-          element={
-            <ProtectRoute
-              user={user}
-              isAuthed={isAuthed}
-              redirect='/admin/login'
-            />
-          }
-        >
-          
-          <Route index element={<Navigate to="/user/dashboard" replace />} />
-          <Route path='dashboard' element={<UserDashboard />} />
-        </Route>
-        {/* 관리자 보호구역 */}
-        <Route
-          path='/admin'
-          element={
-            <ProtectRoute
-              isAuthed={isAuthed}
-              user={user}
-              requiredRole="admin"
-            />
-          }
-        >
-          <Route index element={<Navigate to="/admin/dashboard" replace/>}/>
-          <Route path='dashboard' element={<AdminDashboard/>}/>
-        </Route>
-        <Route path='*' element={<Navigate to="/" replace />} />
-      </Routes>
+      <main style={{ marginTop: 16 }}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route element={<ProtectRoute />}>
+            <Route path="/calendar" element={<Calendar />} />
+          </Route>
+        </Routes>
+      </main>
     </div>
   )
 }
-
-export default App
