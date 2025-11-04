@@ -1,13 +1,11 @@
 import React from 'react'
-import FileList from './FileList'
-import UploadForm from './UploadForm'
-const UserDashboard = () => {
+export default function UserDashboard(){
   return (
-    <section>
-        <UploadForm/>
-        <FileList/>
-    </section>
+    <div className='container'>
+      <div className='card'>
+        <h2>사용자 대시보드</h2>
+        <p>여기에 일정/사진/메모 기능을 확장하세요.</p>
+      </div>
+    </div>
   )
 }
-
-export default UserDashboard

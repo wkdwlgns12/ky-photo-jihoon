@@ -1,38 +1,32 @@
-import { Routes, Route, Link } from 'react-router-dom'
-import Home from './screens/Home'
-import Calendar from './screens/Calendar'
-import ProtectRoute from './ui/ProtectRoute'
-import AuthModal from './auth/AuthModal'
-import { useAuth } from './auth/AuthContext'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import api from './api/client'
+import Header from './components/Header'
+import ProtectRoute from './components/ProtectRoute'
+import Landing from './pages/Landing'
+import UserDashboard from './pages/user/UserDashboard'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import CalendarPage from './components/calendar/CalendarPage'
 
-export default function App() {
-  const { user, logout } = useAuth()
+export default function App(){
+  const [user, setUser] = useState(null)
+  const isAuthed = !!user
+
+  useEffect(()=>{ (async()=>{ try{ const {data}=await api.get('/api/auth/me'); setUser(data.user) }catch{} })() },[])
+
+  const onLogout = ()=>{ localStorage.removeItem('token'); setUser(null) }
 
   return (
-    <div style={{ fontFamily: 'system-ui, sans-serif', padding: 16 }}>
-      <header style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-        <Link to="/">Home</Link>
-        {user && <Link to="/calendar">Calendar</Link>}
-        <div style={{ marginLeft: 'auto' }}>
-          {user ? (
-            <>
-              <span style={{ marginRight: 8 }}>{user.name || user.email}</span>
-              <button onClick={logout}>Logout</button>
-            </>
-          ) : (
-            <AuthModal />
-          )}
-        </div>
-      </header>
-
-      <main style={{ marginTop: 16 }}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route element={<ProtectRoute />}>
-            <Route path="/calendar" element={<Calendar />} />
-          </Route>
-        </Routes>
-      </main>
-    </div>
+    <BrowserRouter>
+      <Header user={user} onLogout={onLogout} />
+      <Routes>
+        <Route path='/' element={<Landing setUser={setUser} />} />
+        <Route element={<ProtectRoute isAuthed={isAuthed} user={user} />}>
+          <Route path='/user' element={<UserDashboard />} />
+          <Route path='/calendar' element={<CalendarPage />} />
+          <Route path='/admin' element={<AdminDashboard />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
