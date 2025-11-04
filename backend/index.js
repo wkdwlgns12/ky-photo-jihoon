@@ -20,7 +20,7 @@ mongoose.connect(process.env.MONGO_URI)
 app.get("/", (_req, res) => res.send("PhotoMemo API OK"));
 
 app.use("/api/auth", require("./routes/authroutes"));
-app.use("/api/events", require("./routes/events"));
+app.use("/api/events", require("./routes/event"));
 
 app.use((req, res) => res.status(404).json({ message: "Not Found" }));
 app.use((err, req, res, next) => { console.error(err); res.status(500).json({ message: "서버 오류" }); });
