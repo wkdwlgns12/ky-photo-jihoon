@@ -1,17 +1,49 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-export default function Header({ user, onLogout }){
+import React from 'react';
+import { Link } from 'react-router-dom';
+import './Header.css';
+
+export default function Header({ user, onLogout }) {
   return (
     <header className='header'>
-      <strong>KY Photo</strong>
-      <nav style={{display:'flex',gap:8,alignItems:'center'}}>
-        <Link className='btn' to='/'>홈</Link>
-        <Link className='btn' to='/calendar'>캘린더</Link>
-        {user ? (<>
-          <span style={{fontSize:12}}>{user.displayName || user.email}</span>
-          <button className='btn' onClick={onLogout}>로그아웃</button>
-        </>) : <span className='btn'>로그인 필요</span>}
+      <Link to='/' className='logo'>
+        <span className='logo-icon'>📸</span>
+        <strong>KY Photo</strong>
+      </Link>
+      
+      <nav className='nav'>
+        {user ? (
+          <>
+            <Link className='nav-link' to='/dashboard'>
+              🏠 대시보드
+            </Link>
+            <Link className='nav-link' to='/photos'>
+              📷 사진
+            </Link>
+            <Link className='nav-link' to='/calendar'>
+              📅 캘린더
+            </Link>
+            
+            {user.role === 'admin' && (
+              <Link className='nav-link admin' to='/admin'>
+                🔧 관리자
+              </Link>
+            )}
+            
+            <div className='user-menu'>
+              <span className='user-name'>
+                {user.displayName || user.email}
+              </span>
+              <button className='btn logout' onClick={onLogout}>
+                로그아웃
+              </button>
+            </div>
+          </>
+        ) : (
+          <Link className='btn primary' to='/'>
+            로그인
+          </Link>
+        )}
       </nav>
     </header>
-  )
+  );
 }
