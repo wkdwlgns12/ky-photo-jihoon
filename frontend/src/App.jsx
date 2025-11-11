@@ -10,6 +10,8 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import UserManagement from './pages/admin/UserManagement';
+import Schedules from './pages/Schedules';
+import ScheduleDetail from './pages/ScheduleDetail';
 
 function App() {
   return (
@@ -28,6 +30,40 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* 일정 관리 라우트 */}
+            <Route
+              path="/schedules"
+              element={
+                <ProtectedRoute>
+                  <Schedules />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/schedules/new"
+              element={
+                <ProtectedRoute>
+                  <ScheduleDetail mode="new" />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/schedules/:id"
+              element={
+                <ProtectedRoute>
+                  <ScheduleDetail mode="view" />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/schedules/:id/edit"
+              element={
+                <ProtectedRoute>
+                  <ScheduleDetail mode="edit" />
                 </ProtectedRoute>
               }
             />

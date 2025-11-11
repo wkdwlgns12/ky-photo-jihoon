@@ -83,4 +83,28 @@ export const adminAPI = {
   getRecentUsers: (limit) => api.get('/admin/users/recent/list', { params: { limit } })
 };
 
+// 일정 관리 API
+export const scheduleAPI = {
+  // 일정 생성
+  create: (data) => api.post('/schedules', data),
+
+  // 일정 목록 조회
+  getAll: (params) => api.get('/schedules', { params }),
+
+  // 캘린더용 일정 조회
+  getCalendar: (year, month) => api.get('/schedules/calendar', { params: { year, month } }),
+
+  // 특정 일정 조회
+  getById: (id) => api.get(`/schedules/${id}`),
+
+  // 일정 수정
+  update: (id, data) => api.put(`/schedules/${id}`, data),
+
+  // 일정 삭제
+  delete: (id) => api.delete(`/schedules/${id}`),
+
+  // 일정 통계 (관리자)
+  getStats: () => api.get('/schedules/stats/summary')
+};
+
 export default api;

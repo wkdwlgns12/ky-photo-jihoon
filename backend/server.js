@@ -26,9 +26,11 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/ky-photo-
 // Routes
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
+const scheduleRoutes = require('./routes/schedule');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/schedules', scheduleRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

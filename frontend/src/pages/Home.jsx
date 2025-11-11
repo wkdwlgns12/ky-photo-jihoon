@@ -22,6 +22,9 @@ const Home = () => {
               <Link to="/dashboard" className="btn btn-primary">
                 대시보드로 이동
               </Link>
+              <Link to="/schedules" className="btn btn-success">
+                일정 관리
+              </Link>
               {user.role === 'admin' && (
                 <Link to="/admin" className="btn btn-secondary">
                   관리자 페이지
@@ -42,16 +45,24 @@ const Home = () => {
 
         <div className="stats-grid" style={{ marginTop: '4rem' }}>
           <div className="card">
-            <h3>회원 관리</h3>
+            <h3>📅 일정 관리</h3>
+            <p>촬영 일정 및 예약 관리</p>
+            <p style={{ fontSize: '0.9rem', color: '#666' }}>캘린더 뷰 지원</p>
+          </div>
+          <div className="card">
+            <h3>👥 회원 관리</h3>
             <p>사용자 계정 및 권한 관리</p>
+            <p style={{ fontSize: '0.9rem', color: '#666' }}>고객 정보 관리</p>
           </div>
           <div className="card">
-            <h3>보안</h3>
+            <h3>🔒 보안</h3>
             <p>JWT 기반 인증 시스템</p>
+            <p style={{ fontSize: '0.9rem', color: '#666' }}>안전한 데이터 보호</p>
           </div>
           <div className="card">
-            <h3>관리자 기능</h3>
-            <p>통계 및 사용자 관리 대시보드</p>
+            <h3>📊 통계</h3>
+            <p>촬영 통계 및 수익 분석</p>
+            <p style={{ fontSize: '0.9rem', color: '#666' }}>실시간 대시보드</p>
           </div>
         </div>
       </div>

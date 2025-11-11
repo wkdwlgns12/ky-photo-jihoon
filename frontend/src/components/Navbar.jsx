@@ -24,6 +24,9 @@ const Navbar = () => {
               <Link to="/dashboard" className="navbar-link">
                 대시보드
               </Link>
+              <Link to="/schedules" className="navbar-link">
+                일정 관리
+              </Link>
               {isAdmin() && (
                 <>
                   <Link to="/admin" className="navbar-link">
