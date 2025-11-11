@@ -19,10 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/ky-photo-jihoon', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/ky-photo-jihoon')
   .then(() => console.log('MongoDB 연결 성공'))
   .catch((err) => console.error('MongoDB 연결 실패:', err));
 
